@@ -6,6 +6,9 @@ var koa    = require('koa'),
     http   = require('http').createServer(app.callback()),
     router = require('koa-router')();
 
+var aggregator = require('./lib/aggregator.js');
+aggregator.beginAggregation();
+
 app.use(serve(__dirname + '/www'));
 
 new pug({

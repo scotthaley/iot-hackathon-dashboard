@@ -16,6 +16,7 @@
   "author": "Scott Haley",
   "license": "ISC",
   "devDependencies": {
+    "azure-event-hubs": "0.0.4",
     "babel": "^6.5.2",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
@@ -40,6 +41,7 @@
     "main-bower-files": "^2.13.1",
     "merge-stream": "^1.0.0",
     "nodemon": "^1.11.0",
+    "promised-mongo": "^1.2.0",
     "pug": "^2.0.0-beta6",
     "run-sequence": "^1.2.2",
     "vue-loader": "^9.7.0",
