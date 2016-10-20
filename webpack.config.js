@@ -9,7 +9,10 @@ module.exports = {
         root: [
             path.resolve('./bower_components'),
             path.resolve('./src')
-        ]
+        ],
+        alias: {
+            jquery: __dirname + '/bower_components/jquery/src/jquery.js'
+        }
     },
     module: {
         loaders: [

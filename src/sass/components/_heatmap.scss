@@ -1,0 +1,9 @@
+.heatmap {
+    @extend .blue-grey, .lighten-5;
+    @extend .z-depth-1;
+    margin-top: 20px;
+
+    canvas {
+        width: 100%;
+    }
+}

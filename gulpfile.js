@@ -58,8 +58,8 @@ gulp.task('sass', function() {
 
 	return gulp.src(sassEntry)
 		.pipe(plugins.sass())
-		.pipe(plugins.cleanCss())
 		.on('error', swallowError)
+		.pipe(plugins.cleanCss())
 		.pipe(gulp.dest(dest + 'css'))
 		.pipe(plugins.livereload());
 });

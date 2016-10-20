@@ -1,20 +1,15 @@
-<template>
-    <div>
-        <topbar></topbar>
-        Message: {{ message }}
-    </div>
+<template lang="pug">
+div
+    topbar
+    heatmap
 </template>
 
 <script>
 import topbar from 'vue/topbar.vue'
+import heatmap from 'vue/heatmap.vue'
 
 export default {
-    name: "VueApp",
-    components: { topbar },
-    data() {
-        return {
-            message: 'Hello Vue.js!'
-        }
-    }
+    name: "IoT-Hackathon",
+    components: { topbar, heatmap }
 }
 </script>

@@ -17,7 +17,7 @@ export default {
 	name: "topbar",
 	data() {
     	return {
-        	title: "Vue TopBar"
+        	title: 'IoT Hackathon (WiFi Heatmap)'
         }
     }
 }
