@@ -12,7 +12,7 @@ var plugins = require("gulp-load-plugins") ({
 // Define default destination folder
 var dest = 'www/public/';
 
-gulp.task('default', ['webpack', 'css', 'watch']);
+gulp.task('default', ['webpack', 'fonts', 'sass', 'watch']);
 
 gulp.task('setup', function(done) {
 	plugins.runSequence('bower', ['webpack', 'css'], done);
@@ -53,6 +53,25 @@ gulp.task('css', function() {
 		.pipe(plugins.livereload());
 });
 
+gulp.task('sass', function() {
+	var sassEntry = './src/sass/main.scss';
+
+	return gulp.src(sassEntry)
+		.pipe(plugins.sass())
+		.pipe(plugins.cleanCss())
+		.on('error', swallowError)
+		.pipe(gulp.dest(dest + 'css'))
+		.pipe(plugins.livereload());
+});
+
+gulp.task('fonts', function() {
+	var fontDirectories = [
+		'./bower_components/materialize/fonts/**/*.*'
+	]
+	return gulp.src(fontDirectories)
+		.pipe(gulp.dest(dest + 'fonts'));
+});
+
 var server;
 
 gulp.task('koa server', function (cb) {
@@ -78,7 +97,8 @@ gulp.task('koa server', function (cb) {
 gulp.task('watch', function() {
 	plugins.livereload.listen();
 	gulp.watch(['src/js/**/*.js', 'src/vue/**/*.vue'], ['webpack']);
-	gulp.watch('src/less/**/*.less', ['css']);
+	// gulp.watch('src/less/**/*.less', ['css']);
+	gulp.watch('src/sass/**/*.scss', ['sass']);
 	gulp.watch('./**/*.html').on('change', function(file) {
 		plugins.livereload.changed(file.path);
 	})

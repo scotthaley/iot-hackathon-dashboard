@@ -2,6 +2,7 @@
   "name": "vueseed",
   "dependencies": {
     "normalize-css": "^5.0.0",
-    "vue": "^2.0.3"
+    "vue": "^2.0.3",
+    "materialize": "^0.97.7"
   }
 }

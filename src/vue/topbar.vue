@@ -1,5 +1,15 @@
-<template>
-<div class="topbar">{{ title }}</div>
+<template lang="pug">
+nav
+	div.nav-wrapper.topbar
+		a.brand-logo {{ title }}
+		ul(
+			href='#'
+			class='right hide-on-med-and-down'
+			)
+			li
+				a(href='#') Home
+			li
+				a(href='#') Account
 </template>
 
 <script>
@@ -12,17 +22,3 @@ export default {
     }
 }
 </script>
-
-<style lang="less" scoped>
-@import "../less/variables/colors";
-
-.topbar {
-	background-color: @topbar;
-	position: relative;
-	top: 0;
-	left: 0;
-	width: 100%;
-	padding: 15px;
-	color: @topbar-font;
-}
-</style>

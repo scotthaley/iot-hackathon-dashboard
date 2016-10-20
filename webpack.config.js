@@ -16,12 +16,17 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue'
-            }
+            },
+    		{
+        		test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'url'
+    		}
         ]
     },
     vue: {
         loaders: {
-            js: 'babel'
+            js: 'babel',
+            sass: 'style!css!sass!resolve-url!sass?sourceMap'
         }
     }
 }
