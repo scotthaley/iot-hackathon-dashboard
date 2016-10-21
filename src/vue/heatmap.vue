@@ -15,6 +15,8 @@ export default {
         return {
             offsetHeight: 0,
             zoom: 50,
+            gridX: 0,
+            gridY: 0,
             map: {
                 walls: [
                     [
@@ -42,6 +44,10 @@ export default {
             this.fixSize();
             this.draw();
         });
+        this.$refs.canvas.addEventListener('mousedown', this.gridMouseDown);
+        this.$refs.canvas.addEventListener('mouseup', this.gridMouseUp);
+        this.$refs.canvas.addEventListener('mousemove', this.gridMouseMove);
+        this.$refs.canvas.addEventListener('mousewheel', this.gridScroll);
     },
     computed: {
         componentHeight() {
@@ -58,6 +64,9 @@ export default {
         init() {
             this.ctx = this.$refs.canvas.getContext('2d');
             this.gSize = 50;
+
+            this.gridDragging = false;
+            this.gridDraggingLastPos = null;
         },
         fixSize() {
             let maxHeight = $(window).height() - this.offsetHeight;
@@ -73,10 +82,33 @@ export default {
             this.gridCenterX = Math.ceil(this.gridWidth / 2);
             this.gridCenterY = Math.ceil(this.gridHeight / 2);
         },
+        gridScroll(e) {
+            this.$data.zoom -= e.deltaY / 10;
+            if (this.$data.zoom < 5)
+            	this.$data.zoom = 5;
+            if (this.$data.zoom > 100)
+            	this.$data.zoom = 100;
+        },
+        gridMouseDown(e) {
+            this.gridDragging = true;
+            this.gridDraggingLastPos = {x: e.clientX, y: e.clientY};
+        },
+        gridMouseUp(e) {
+            this.gridDragging = false;
+            this.gridDraggingLastPos = null;
+        },
+        gridMouseMove(e) {
+            if (this.gridDragging && this.gridDraggingLastPos) {
+                this.$data.gridX -= e.clientX - this.gridDraggingLastPos.x;
+                this.$data.gridY -= e.clientY - this.gridDraggingLastPos.y;
+                this.gridDraggingLastPos = {x: e.clientX, y: e.clientY};
+                this.draw();
+            }
+        },
         gridPos(x,y) {
             return {
-                x: this.canvasCenterX + (x * this.$data.zoom),
-                y: this.canvasCenterY + (-y * this.$data.zoom)
+                x: this.canvasCenterX + (x * this.$data.zoom) - this.$data.gridX,
+                y: this.canvasCenterY + (-y * this.$data.zoom) - this.$data.gridY
             }
         },
         draw() {
@@ -114,10 +146,10 @@ export default {
             }
         },
         _drawGrid() {
-            let yMin = this.canvasCenterY - (this.gridCenterY * this.$data.zoom);
-            let yMax = this.canvasCenterY + (this.gridCenterY * this.$data.zoom);
-            let xMin = this.canvasCenterX - (this.gridCenterX * this.$data.zoom);
-            let xMax = this.canvasCenterX + (this.gridCenterX * this.$data.zoom);
+            let yMin = this.canvasCenterY - (this.gridCenterY * this.$data.zoom) - this.$data.gridY;
+            let yMax = this.canvasCenterY + (this.gridCenterY * this.$data.zoom) - this.$data.gridY;
+            let xMin = this.canvasCenterX - (this.gridCenterX * this.$data.zoom) - this.$data.gridX;
+            let xMax = this.canvasCenterX + (this.gridCenterX * this.$data.zoom) - this.$data.gridX;
 
             for (var x = -this.gridCenterX; x <= this.gridCenterX; x ++) {
                 if (x == 0) {
@@ -126,7 +158,7 @@ export default {
                     this.ctx.strokeStyle = "#cde9fb";
                 }
 
-                let xLine = (x * this.$data.zoom) + this.canvasCenterX;
+                let xLine = this.gridPos(x, 0).x;
                 this.ctx.beginPath();
                 this.ctx.moveTo(xLine, yMin);
                 this.ctx.lineTo(xLine, yMax);
@@ -138,7 +170,7 @@ export default {
                 } else {
                     this.ctx.strokeStyle = "#cde9fb";
                 }
-                let yLine = (y * this.$data.zoom) + this.canvasCenterY;
+                let yLine = this.gridPos(0, y).y;
                 this.ctx.beginPath();
                 this.ctx.moveTo(xMin, yLine);
                 this.ctx.lineTo(xMax, yLine);

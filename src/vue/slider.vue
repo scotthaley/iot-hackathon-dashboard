@@ -2,7 +2,7 @@
 div
     form(action="#")
         p.range-field
-            input(type="range", min="10", max="150", :value="value",
+            input(type="range", min="5", max="100", :value="value",
                  @input="$emit('input', $event.target.value)"
             )
 </template>
