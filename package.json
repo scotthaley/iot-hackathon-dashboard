@@ -51,6 +51,7 @@
     "run-sequence": "^1.2.2",
     "sass-loader": "^4.0.2",
     "sass-resources-loader": "^1.1.0",
+    "socketio": "^1.0.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "vue-loader": "^9.7.0",

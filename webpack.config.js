@@ -11,7 +11,8 @@ module.exports = {
             path.resolve('./src')
         ],
         alias: {
-            jquery: __dirname + '/bower_components/jquery/src/jquery.js'
+            jquery: __dirname + '/bower_components/jquery/src/jquery.js',
+            jssrc: __dirname + '/src/js'
         }
     },
     module: {

@@ -13,7 +13,7 @@ var plugins = require("gulp-load-plugins") ({
 // Define default destination folder
 var dest = 'www/public/';
 
-gulp.task('default', ['webpack', 'fonts', 'sass', 'watch']);
+gulp.task('default', ['koa server','webpack', 'fonts', 'sass', 'watch']);
 
 gulp.task('setup', function(done) {
 	plugins.runSequence('bower', ['webpack', 'css'], done);
@@ -99,11 +99,7 @@ gulp.task('koa server', function (cb) {
 		env: {'NODE_ENV': 'development'}
 	})
 	.on('quit', function() {
-		console.log('Press any key to exit');
-
-		process.stdin.setRawMode(true);
-		process.stdin.resume();
-		process.stdin.on('data', process.exit.bind(process, 0));
+		process.exit()
 	});
 });
 

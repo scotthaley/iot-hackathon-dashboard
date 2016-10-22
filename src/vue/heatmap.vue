@@ -8,13 +8,15 @@ div.container.heatmap
 import slider from 'vue/slider.vue'
 
 var $ = require('jquery');
+var socket = require('jssrc/socket.js');
+
 export default {
     name: 'heatmap',
     components: { slider },
     data() {
         return {
             offsetHeight: 0,
-            zoom: 50,
+            zoom: 40,
             gridX: 0,
             gridY: 0,
             canvasStyle: {
@@ -24,33 +26,142 @@ export default {
             map: {
                 walls: [
                     [
-                        {x: 0, y: 0, c: 'rl'},
-                        {x: 1, y: 0, c: 'rl'},
-                        {x: 2, y: 0, c: 'lt'},
-                        {x: 2, y: 1, c: 'b'},
-                        {x: -1, y: 0, c: 'rl'},
-                        {x: -2, y: 0, c: 'br'},
-                        {x: -2, y: -1, c: 't'}
+                        {x: -9, y: 0, c: 't'},
+                        {x: -9, y: 1, c: 'tb'},
+                        {x: -9, y: 2, c: 'tb'},
+                        {x: -9, y: 3, c: 'tb'},
+                        {x: -9, y: 4, c: 'tb'},
+                        {x: -9, y: 5, c: 'tb'},
+                        {x: -9, y: 6, c: 'tb'},
+                        {x: -9, y: 7, c: 'br'},
+                        {x: -8, y: 7, c: 'lr'},
+                        {x: -7, y: 7, c: 'lr'},
+                        {x: -6, y: 7, c: 'lr'},
+                        {x: -5, y: 7, c: 'lr'},
+                        {x: -5, y: 7, c: 'lr'},
+                        {x: -4, y: 7, c: 'lr'},
+                        {x: -3, y: 7, c: 'lr'},
+                        {x: -2, y: 7, c: 'lr'},
+                        {x: -1, y: 7, c: 'lr'},
+                        {x: 0, y: 7, c: 'lr'},
+                        {x: 1, y: 7, c: 'lr'},
+                        {x: 2, y: 7, c: 'lr'},
+                        {x: 3, y: 7, c: 'lr'},
+                        {x: 4, y: 7, c: 'lr'},
+                        {x: 5, y: 7, c: 'lr'},
+                        {x: 6, y: 7, c: 'lr'},
+                        {x: 7, y: 7, c: 'lr'},
+                        {x: 8, y: 7, c: 'lb'},
+                        {x: 8, y: 6, c: 'tb'},
+                        {x: 8, y: 5, c: 'tb'},
+                        {x: 8, y: 4, c: 't'},
+                        {x: 8, y: 0, c: 'b'},
+                        {x: 8, y: -1, c: 'tb'},
+                        {x: 8, y: -2, c: 'tb'},
+                        {x: 8, y: -3, c: 'tb'},
+                        {x: 8, y: -4, c: 'tb'},
+                        {x: 8, y: -5, c: 'tb'},
+                        {x: 8, y: -6, c: 'tb'},
+                        {x: 8, y: -7, c: 'tb'},
+                        {x: 8, y: -8, c: 'tl'},
+                        {x: -9, y: -8, c: 'tr'},
+                        {x: -8, y: -8, c: 'lr'},
+                        {x: -7, y: -8, c: 'lr'},
+                        {x: -6, y: -8, c: 'lr'},
+                        {x: -5, y: -8, c: 'lr'},
+                        {x: -5, y: -8, c: 'lr'},
+                        {x: -4, y: -8, c: 'lr'},
+                        {x: -3, y: -8, c: 'lr'},
+                        {x: -2, y: -8, c: 'lr'},
+                        {x: -1, y: -8, c: 'lr'},
+                        {x: 0, y: -8, c: 'lr'},
+                        {x: 1, y: -8, c: 'lr'},
+                        {x: 2, y: -8, c: 'lr'},
+                        {x: 3, y: -8, c: 'lr'},
+                        {x: 4, y: -8, c: 'lr'},
+                        {x: 5, y: -8, c: 'lr'},
+                        {x: 6, y: -8, c: 'lr'},
+                        {x: 7, y: -8, c: 'lr'},
+                        {x: 8, y: -8, c: 'lt'},
+                        {x: -9, y: -7, c: 'bt'},
+                        {x: -9, y: -6, c: 'bt'},
+                        {x: -9, y: -5, c: 'bt'},
+                        {x: -9, y: -4, c: 'b'},
+
+
+                        {x: -6, y: 4, c: 'r'},
+                        {x: -5, y: 4, c: 'lr'},
+                        {x: -4, y: 4, c: 'lr'},
+                        {x: -3, y: 4, c: 'lr'},
+                        {x: -2, y: 4, c: 'lr'},
+                        {x: -1, y: 4, c: 'lr'},
+                        {x: 0, y: 4, c: 'lr'},
+                        {x: 1, y: 4, c: 'lr'},
+                        {x: 2, y: 4, c: 'l'},
+
+                        {x: 5, y: 4, c: 'b'},
+                        {x: 5, y: 3, c: 'tb'},
+                        {x: 5, y: 2, c: 'tb'},
+                        {x: 5, y: 1, c: 'tb'},
+                        {x: 5, y: 0, c: 't'},
+
+                        {x: -6, y: 1, c: 'b'},
+                        {x: -6, y: 0, c: 'tb'},
+                        {x: -6, y: -1, c: 'tb'},
+                        {x: -6, y: -2, c: 'tb'},
+                        {x: -6, y: -3, c: 'tb'},
+                        {x: -6, y: -4, c: 'tb'},
+                        {x: -6, y: -5, c: 't'},
+
+                        {x: -3, y: 1, c: 'b'},
+                        {x: -3, y: 0, c: 'tb'},
+                        {x: -3, y: -1, c: 'tb'},
+                        {x: -3, y: -2, c: 'tb'},
+                        {x: -3, y: -3, c: 'tb'},
+                        {x: -3, y: -4, c: 'tb'},
+                        {x: -3, y: -5, c: 't'},
+
+                        {x: 0, y: 1, c: 'b'},
+                        {x: 0, y: 0, c: 'tb'},
+                        {x: 0, y: -1, c: 'tb'},
+                        {x: 0, y: -2, c: 'tb'},
+                        {x: 0, y: -3, c: 'tb'},
+                        {x: 0, y: -4, c: 'tb'},
+                        {x: 0, y: -5, c: 't'},
+
+                        {x: 3, y: -5, c: 'tr'},
+                        {x: 4, y: -5, c: 'trl'},
+                        {x: 5, y: -5, c: 'tl'},
+                        {x: 3, y: -4, c: 'btr'},
+                        {x: 4, y: -4, c: 'btrl'},
+                        {x: 5, y: -4, c: 'btl'},
+                        {x: 3, y: -3, c: 'br'},
+                        {x: 4, y: -3, c: 'brl'},
+                        {x: 5, y: -3, c: 'bl'},
+
                     ]
                 ],
                 nodes: [
-                    {x: 2.5, y: 2, id: 'Chairs', range: 4},
-                    {x: -1.5, y: -1, id: 'Desks', range: 4}
+                	{x: 5.5, y: 2.5, id: 'node 1', range: 4},
+                	{x: 0.5, y: -4.5, id: 'node 2', range: 4},
+                	{x: 0.5, y: 1.5, id: 'node 3', range: 4},
+                	{x: -2.5, y: -4.5, id: 'node 4', range: 4},
+                	{x: -2.5, y: 1.5, id: 'node 5', range: 4},
+                	{x: -5.5, y: -4.5, id: 'node 6', range: 4},
+                	{x: -5.5, y: 1.5, id: 'node 7', range: 4},
+                	{x: -5.5, y: 4.5, id: 'node 8', range: 4},
+                	{x: 2.5, y: 4.5, id: 'node 9', range: 4},
+                	{x: 6, y: -3.5, id: 'node 10', range: 4}
                 ]
             },
             devices: {
-                'Chairs': [
-                    {mac: '4C:23:A2:41:A2', strength: -70},
-                    {mac: '4C:23:A2:41:A2', strength: -30},
-                    {mac: '4C:23:A2:41:A2', strength: -30},
-                    {mac: '4C:23:A2:41:A2', strength: -10}
-                ],
-                'Desks': [
-                    {mac: '4C:23:A2:41:A2', strength: -70},
-                    {mac: '4C:23:A2:41:A2', strength: -60},
-                    {mac: '4C:23:A2:41:A2', strength: -60},
-                    {mac: '4C:23:A2:41:A2', strength: -90}
-                ]
+                "node 1": {
+                    "hits":[-60,-95,-99,-4,-67,-16,-54,-67,-29,-95,-47,-54,-55,-29,-43,-71,-20,-14,-42,-54]
+                },
+                "aisle 2": {
+                },
+                "aisle 3": {
+                }
             }
         }
     },
@@ -97,6 +208,19 @@ export default {
 
             this.gridDragging = false;
             this.gridDraggingLastPos = null;
+
+			var heatmap = this;
+
+            socket.on('new data point', function(msg) {
+                for (var i in msg) {
+                    var device = msg[i];
+                    if (!heatmap.$data.devices[device.deviceId]) {
+                        heatmap.$data.devices[device.deviceId] = {};
+                    }
+                    heatmap.$data.devices[device.deviceId].hits = device.payload.hits;
+                    heatmap.draw();
+                }
+            });
         },
         fixSize() {
             let maxHeight = $(window).height() - this.offsetHeight;
@@ -203,22 +327,25 @@ export default {
             for (var i in this.$data.map.nodes) {
                 let node = this.$data.map.nodes[i];
                 let pos = this.gridPos(node.x, node.y)
-                let devices = this.$data.devices[node.id];
-                for (var d in devices) {
-                    let hit = devices[d];
-                    let radius = node.range * this.$data.zoom * (100 + hit.strength) / 100;
-                    this.ctx.globalAlpha = 0.2;
-                    this.ctx.fillStyle = "#6c88c4";
-                    this.ctx.beginPath();
-                    this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI*2, true);
-                    this.ctx.fill();
-                    this.ctx.globalAlpha = 1;
+                let device = this.$data.devices[node.id];
+                if (device) {
+                    for (var h in device.hits) {
+                        let hit = parseInt(device.hits[h]);
+                        let radius = node.range * this.$data.zoom * (100 + hit) / 100;
+                        this.ctx.globalAlpha = 0.2;
+                        this.ctx.fillStyle = "#6c88c4";
+                        this.ctx.beginPath();
+                        this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI*2, true);
+                        this.ctx.fill();
+                        this.ctx.globalAlpha = 1;
+                    }
                 }
             }
         },
         _drawWalls() {
             this.ctx.strokeStyle = "#6f6f6f";
-            this.ctx.fillStyle = "#ebebeb"
+            this.ctx.fillStyle = "#ebebeb";
+            this.ctx.globalAlpha = 1;
             for (var i in this.$data.map.walls) {
                 for (var w in this.$data.map.walls[i]) {
                     let wall = this.$data.map.walls[i][w];

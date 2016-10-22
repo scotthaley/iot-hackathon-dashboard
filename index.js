@@ -4,10 +4,11 @@ var koa    = require('koa'),
     path   = require('path'),
     app    = koa(),
     http   = require('http').createServer(app.callback()),
-    router = require('koa-router')();
+    router = require('koa-router')(),
+    io = require('socket.io')(http);
 
 var aggregator = require('./lib/aggregator.js');
-aggregator.beginAggregation();
+aggregator.beginAggregation(io);
 
 app.use(serve(__dirname + '/www'));
 
@@ -25,6 +26,10 @@ router
 
 app.use(router.routes());
 
-http.listen(80, function() {
+io.on('connection', function(socket) {
+  console.log("a user connected");
+});
+
+http.listen(8080, function() {
   console.log("Listening on port 80");
 });
