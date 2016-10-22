@@ -34,7 +34,22 @@ export default {
                     ]
                 ],
                 nodes: [
-                    {x: 2.5, y: 2, id: 'Chairs'}
+                    {x: 2.5, y: 2, id: 'Chairs', range: 4},
+                    {x: -1.5, y: -1, id: 'Desks', range: 4}
+                ]
+            },
+            devices: {
+                'Chairs': [
+                    {mac: '4C:23:A2:41:A2', strength: -70},
+                    {mac: '4C:23:A2:41:A2', strength: -30},
+                    {mac: '4C:23:A2:41:A2', strength: -30},
+                    {mac: '4C:23:A2:41:A2', strength: -10}
+                ],
+                'Desks': [
+                    {mac: '4C:23:A2:41:A2', strength: -70},
+                    {mac: '4C:23:A2:41:A2', strength: -60},
+                    {mac: '4C:23:A2:41:A2', strength: -60},
+                    {mac: '4C:23:A2:41:A2', strength: -90}
                 ]
             }
         }
@@ -145,6 +160,7 @@ export default {
                 let d = Math.sqrt(Math.pow((pos.x - e.x),2) + Math.pow((pos.y - e.y),2));
                 if (d < this.nodeSize()) {
                     this.hoverNode = node;
+                    return;
                 } else {
                     this.hoverNode = null;
                 }
@@ -153,6 +169,7 @@ export default {
         draw() {
             this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
             this._drawGrid();
+            this._drawHeatmap();
             this._drawWalls();
             this._drawNodes();
             this._drawNodeDetails();
@@ -182,8 +199,26 @@ export default {
                 this.ctx.stroke();
             }
         },
+        _drawHeatmap() {
+            for (var i in this.$data.map.nodes) {
+                let node = this.$data.map.nodes[i];
+                let pos = this.gridPos(node.x, node.y)
+                let devices = this.$data.devices[node.id];
+                for (var d in devices) {
+                    let hit = devices[d];
+                    let radius = node.range * this.$data.zoom * (100 + hit.strength) / 100;
+                    this.ctx.globalAlpha = 0.2;
+                    this.ctx.fillStyle = "#6c88c4";
+                    this.ctx.beginPath();
+                    this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI*2, true);
+                    this.ctx.fill();
+                    this.ctx.globalAlpha = 1;
+                }
+            }
+        },
         _drawWalls() {
             this.ctx.strokeStyle = "#6f6f6f";
+            this.ctx.fillStyle = "#ebebeb"
             for (var i in this.$data.map.walls) {
                 for (var w in this.$data.map.walls[i]) {
                     let wall = this.$data.map.walls[i][w];
@@ -207,6 +242,7 @@ export default {
                         this.ctx.lineTo(pos4.x, pos4.y);
                     if (wall.c.indexOf('l') == -1)
                     	this.ctx.lineTo(pos1.x, pos1.y);
+                    this.ctx.fillRect(pos1.x, pos1.y, pos3.x - pos1.x, pos3.y - pos1.y);
                     this.ctx.stroke();
                 }
             }
