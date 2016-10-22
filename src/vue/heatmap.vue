@@ -1,7 +1,7 @@
 <template lang="pug">
 div.container.heatmap
     slider.zoomslider(v-model="zoom")
-    canvas(ref="canvas")
+    canvas(ref="canvas", :style="canvasStyle")
 </template>
 
 <script>
@@ -17,6 +17,10 @@ export default {
             zoom: 50,
             gridX: 0,
             gridY: 0,
+            canvasStyle: {
+                cursor: "move"
+            },
+            hoverNode: null,
             map: {
                 walls: [
                     [
@@ -28,6 +32,9 @@ export default {
                         {x: -2, y: 0, c: 'br'},
                         {x: -2, y: -1, c: 't'}
                     ]
+                ],
+                nodes: [
+                    {x: 2.5, y: 2, id: 'Chairs'}
                 ]
             }
         }
@@ -58,12 +65,20 @@ export default {
     watch: {
         zoom() {
             this.draw();
+        },
+        hoverNode(newNode) {
+            if (newNode) {
+                this.$data.canvasStyle.cursor = "pointer";
+            } else {
+                this.$data.canvasStyle.cursor = "move";
+            }
+            this.draw();
         }
     },
     methods: {
         init() {
             this.ctx = this.$refs.canvas.getContext('2d');
-            this.gSize = 50;
+            this.nodeRadius = 10;
 
             this.gridDragging = false;
             this.gridDraggingLastPos = null;
@@ -103,7 +118,16 @@ export default {
                 this.$data.gridY -= e.clientY - this.gridDraggingLastPos.y;
                 this.gridDraggingLastPos = {x: e.clientX, y: e.clientY};
                 this.draw();
+            } else {
+                this.mouseOverNodes(this.mousePos(e));
             }
+        },
+        mousePos(e) {
+            var rect = this.$refs.canvas.getBoundingClientRect();
+            return {
+        		x: e.clientX - rect.left,
+            	y: e.clientY - rect.top
+            };
         },
         gridPos(x,y) {
             return {
@@ -111,10 +135,52 @@ export default {
                 y: this.canvasCenterY + (-y * this.$data.zoom) - this.$data.gridY
             }
         },
+        nodeSize() {
+            return this.nodeRadius * (this.$data.zoom / 50);
+        },
+        mouseOverNodes(e) {
+            for (var i in this.$data.map.nodes) {
+                let node = this.$data.map.nodes[i];
+                let pos = this.gridPos(node.x, node.y);
+                let d = Math.sqrt(Math.pow((pos.x - e.x),2) + Math.pow((pos.y - e.y),2));
+                if (d < this.nodeSize()) {
+                    this.hoverNode = node;
+                } else {
+                    this.hoverNode = null;
+                }
+            }
+        },
         draw() {
             this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
             this._drawGrid();
             this._drawWalls();
+            this._drawNodes();
+            this._drawNodeDetails();
+        },
+        _drawNodeDetails() {
+            var node = this.$data.hoverNode;
+            if (node) {
+                this.ctx.fillStyle = "#0b1b3b";
+                let pos = this.gridPos(node.x, node.y);
+                let rectPos = {x: pos.x - 100, y: pos.y - this.nodeSize() - 60}
+                this.ctx.fillRect(rectPos.x, rectPos.y, 200, 50);
+                this.ctx.fillStyle = "#ebebeb";
+                this.ctx.font = "24px Roboto, sans-serif";
+                let textSize = this.ctx.measureText(node.id);
+                this.ctx.fillText(node.id, rectPos.x + 100 - textSize.width / 2, rectPos.y + 35);
+            }
+        },
+        _drawNodes() {
+            this.ctx.strokeStyle = "#6f6f6f";
+            this.ctx.fillStyle = "#ebebeb";
+            for (var i in this.$data.map.nodes) {
+                let node = this.$data.map.nodes[i];
+                let pos = this.gridPos(node.x, node.y)
+                this.ctx.beginPath();
+                this.ctx.arc(pos.x, pos.y, this.nodeSize(), 0, Math.PI*2, true);
+                this.ctx.fill();
+                this.ctx.stroke();
+            }
         },
         _drawWalls() {
             this.ctx.strokeStyle = "#6f6f6f";
