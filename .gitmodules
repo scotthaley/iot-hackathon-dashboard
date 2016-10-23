@@ -1,0 +1,3 @@
+[submodule "simulator"]
+	path = simulator
+	url = git@github.com:scotthaley/iot-hackathon-simulator.git
