@@ -142,7 +142,8 @@ export default {
                     ]
                 ],
                 nodes: [
-                	{x: 5.5, y: 2.5, id: 'node 1', range: 4},
+                	{x: 5.5, y: 4.5, id: 'node 1', range: 4},
+                	{x: 5.5, y: 0.5, id: 'node 11', range: 4},
                 	{x: 0.5, y: -4.5, id: 'node 2', range: 4},
                 	{x: 0.5, y: 1.5, id: 'node 3', range: 4},
                 	{x: -2.5, y: -4.5, id: 'node 4', range: 4},
@@ -151,7 +152,21 @@ export default {
                 	{x: -5.5, y: 1.5, id: 'node 7', range: 4},
                 	{x: -5.5, y: 4.5, id: 'node 8', range: 4},
                 	{x: 2.5, y: 4.5, id: 'node 9', range: 4},
-                	{x: 6, y: -3.5, id: 'node 10', range: 4}
+                	{x: 6, y: -5, id: 'node 10', range: 4},
+                	{x: -8, y: -7, id: 'node 12', range: 4},
+                	{x: -4, y: -7, id: 'node 13', range: 4},
+                	{x: -1, y: -7, id: 'node 14', range: 4},
+                	{x: 2, y: -7, id: 'node 15', range: 4},
+                	{x: 3, y: -2, id: 'node 16', range: 4},
+                	{x: 8, y: 1, id: 'node 17', range: 4},
+                	{x: 8, y: 7, id: 'node 18', range: 4},
+                	{x: 2.5, y: 7, id: 'node 19', range: 4},
+                	{x: -2.5, y: 7, id: 'node 20', range: 4},
+                	{x: -8, y: 7, id: 'node 21', range: 4},
+                	{x: -8, y: 2.5, id: 'node 22', range: 4},
+                	{x: 8, y: -7, id: 'node 23', range: 4},
+                	{x: 8, y: -3, id: 'node 24', range: 4},
+                	{x: -1.5, y: 4.5, id: 'node 25', range: 4},
                 ]
             },
             devices: {
