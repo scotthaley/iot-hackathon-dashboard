@@ -17,7 +17,7 @@ gulp.task('server', ['koa server','webpack', 'fonts', 'sass', 'watch']);
 gulp.task('default', ['webpack', 'fonts', 'sass', 'watch']);
 
 gulp.task('setup', function(done) {
-	plugins.runSequence('bower', ['webpack', 'css'], done);
+	plugins.runSequence('bower', ['webpack', 'fonts', 'sass'], done);
 });
 
 gulp.task('bower', function() {
